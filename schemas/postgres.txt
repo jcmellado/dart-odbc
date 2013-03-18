@@ -1,0 +1,118 @@
+
+CREATE TABLE customers (
+  customer_id INT         NOT NULL,
+  name        VARCHAR(25) NOT NULL,
+  address     VARCHAR(25),
+  phone       VARCHAR(10)
+);
+
+ALTER TABLE customers
+  ADD PRIMARY KEY (customer_id);
+  
+CREATE TABLE parts (
+  part_id     INT            NOT NULL,
+  description VARCHAR(50)    NOT NULL,
+  price       DECIMAL(10, 2) NOT NULL
+);
+
+ALTER TABLE parts
+  ADD PRIMARY KEY (part_id);
+
+CREATE TABLE orders (
+  order_id     INT         NOT NULL,
+  customer_id  INT         NOT NULL,
+  open_date    TIMESTAMP   NOT NULL,
+  sales_person VARCHAR(25) NOT NULL,
+  status       VARCHAR(6)  NOT NULL
+);
+
+ALTER TABLE orders
+  ADD PRIMARY KEY (order_id);
+
+ALTER TABLE orders
+  ADD CONSTRAINT orders_customers_fk
+  FOREIGN KEY (customer_id)
+  REFERENCES customers(customer_id);
+
+CREATE TABLE order_lines (
+  line_id  INT NOT NULL,
+  order_id INT NOT NULL,
+  part_id  INT NOT NULL,
+  quantity INT NOT NULL
+);
+
+ALTER TABLE order_lines
+  ADD PRIMARY KEY (line_id);
+
+ALTER TABLE order_lines
+  ADD CONSTRAINT lines_orders_fk
+  FOREIGN KEY (order_id)
+  REFERENCES orders(order_id);
+
+ALTER TABLE order_lines
+  ADD CONSTRAINT lines_parts_fk
+  FOREIGN KEY (part_id)
+  REFERENCES parts(part_id);
+
+CREATE TABLE pictures (
+  part_id INT NOT NULL,
+  picture bytea
+);
+
+ALTER TABLE pictures
+  ADD PRIMARY KEY (part_id);
+ 
+ALTER TABLE pictures
+  ADD CONSTRAINT pictures_parts_fk
+  FOREIGN KEY (part_id)
+  REFERENCES parts(part_id);
+  
+CREATE FUNCTION order_amount(id INT) RETURNS DECIMAL AS $$
+  DECLARE amount DECIMAL;
+  BEGIN
+    SELECT SUM(L.quantity * P.price)
+      INTO amount
+      FROM order_lines L,
+           parts       P
+     WHERE L.order_id = id
+       AND P.part_id  = L.part_id;
+    RETURN amount;
+  END;
+$$ LANGUAGE plpgsql;
+
+  
+INSERT INTO customers(customer_id, name, address, phone)
+ VALUES(1, 'Mike', 'Bond Street', '555001');
+
+INSERT INTO customers(customer_id, name, address, phone)
+ VALUES(2, 'Peter', 'Horn Avenue', '555002');
+ 
+INSERT INTO customers(customer_id, name, address, phone)
+ VALUES(3, 'Sarah', 'Dilton Park', '555003');
+ 
+INSERT INTO parts(part_id, description, price)
+ VALUES(1, 'Pipe', 12.5);
+
+INSERT INTO parts(part_id, description, price)
+ VALUES(2, 'Tap', 100);
+
+INSERT INTO orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(1, 1, '2013-03-01 00:00:00', 'John', 'Closed');
+
+INSERT INTO orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(2, 1, '2013-03-02 00:00:00', 'John', 'Open');
+
+INSERT INTO orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(3, 2, '2013-03-03 00:00:00', 'Sue', 'Open');
+
+INSERT INTO order_lines(line_id, order_id, part_id, quantity)
+ VALUES(1, 1, 1, 1);
+
+INSERT INTO order_lines(line_id, order_id, part_id, quantity)
+ VALUES(2, 2, 1, 5);
+
+INSERT INTO order_lines(line_id, order_id, part_id, quantity)
+ VALUES(3, 2, 2, 1);
+
+INSERT INTO order_lines(line_id, order_id, part_id, quantity)
+ VALUES(4, 3, 2, 2);

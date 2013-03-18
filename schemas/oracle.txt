@@ -1,0 +1,140 @@
+
+CREATE USER odbc_test IDENTIFIED BY odbc_test;
+
+GRANT CREATE SESSION,
+      CREATE TABLE, CREATE VIEW, CREATE PROCEDURE, CREATE SYNONYM
+  TO odbc_test;
+  
+ALTER USER odbc_test QUOTA UNLIMITED ON users;
+
+CREATE TABLE odbc_test.customers (
+  customer_id NUMBER(15)   NOT NULL,
+  name        VARCHAR2(25) NOT NULL,
+  address     VARCHAR2(25),
+  phone       VARCHAR2(10)
+) TABLESPACE users;
+
+ALTER TABLE odbc_test.customers
+  ADD CONSTRAINT customers_pk
+  PRIMARY KEY (customer_id)
+  USING INDEX
+  TABLESPACE users;
+
+CREATE TABLE odbc_test.parts (
+  part_id     NUMBER(15)    NOT NULL,
+  description VARCHAR2(50)  NOT NULL,
+  price       NUMBER(10, 2) NOT NULL
+) TABLESPACE users;
+
+ALTER TABLE odbc_test.parts
+  ADD CONSTRAINT parts_pk
+  PRIMARY KEY (part_id)
+  USING INDEX
+  TABLESPACE users;
+
+CREATE TABLE odbc_test.orders (
+  order_id     NUMBER(15)   NOT NULL,
+  customer_id  NUMBER(15)   NOT NULL,
+  open_date    DATE         NOT NULL,
+  sales_person VARCHAR2(25) NOT NULL,
+  status       VARCHAR2(6)  NOT NULL
+) TABLESPACE users;
+
+ALTER TABLE odbc_test.orders
+  ADD CONSTRAINT orders_pk
+  PRIMARY KEY (order_id)
+  USING INDEX
+  TABLESPACE users;
+
+ALTER TABLE odbc_test.orders
+  ADD CONSTRAINT orders_customers_fk
+  FOREIGN KEY (customer_id)
+  REFERENCES odbc_test.customers(customer_id);
+
+CREATE TABLE odbc_test.order_lines (
+  line_id  NUMBER(15) NOT NULL,
+  order_id NUMBER(15) NOT NULL,
+  part_id  NUMBER(15) NOT NULL,
+  quantity NUMBER(10) NOT NULL
+) TABLESPACE users;
+
+ALTER TABLE odbc_test.order_lines
+  ADD CONSTRAINT lines_pk
+  PRIMARY KEY (line_id)
+  USING INDEX
+  TABLESPACE users;
+
+ALTER TABLE odbc_test.order_lines
+  ADD CONSTRAINT lines_orders_fk
+  FOREIGN KEY (order_id)
+  REFERENCES odbc_test.orders(order_id);
+
+ALTER TABLE odbc_test.order_lines
+  ADD CONSTRAINT lines_parts_fk
+  FOREIGN KEY (part_id)
+  REFERENCES odbc_test.parts(part_id);
+
+CREATE TABLE odbc_test.pictures (
+  part_id NUMBER(15) NOT NULL,
+  picture BLOB
+) TABLESPACE users;
+
+ALTER TABLE odbc_test.pictures
+  ADD CONSTRAINT pictures_pk
+  PRIMARY KEY (part_id)
+  USING INDEX
+  TABLESPACE users;
+ 
+ALTER TABLE odbc_test.pictures
+  ADD CONSTRAINT pictures_parts_fk
+  FOREIGN KEY (part_id)
+  REFERENCES odbc_test.parts(part_id);
+  
+CREATE FUNCTION odbc_test.order_amount(id NUMBER) RETURN NUMBER IS
+    amount NUMBER;
+  BEGIN
+    SELECT SUM(L.quantity * P.price)
+      INTO amount
+      FROM order_lines L,
+           parts       P
+     WHERE L.order_id = id
+       AND P.part_id  = L.part_id;
+    RETURN amount;
+  END;
+/
+  
+INSERT INTO odbc_test.customers(customer_id, name, address, phone)
+ VALUES(1, 'Mike', 'Bond Street', '555001');
+
+INSERT INTO odbc_test.customers(customer_id, name, address, phone)
+ VALUES(2, 'Peter', 'Horn Avenue', '555002');
+ 
+INSERT INTO odbc_test.customers(customer_id, name, address, phone)
+ VALUES(3, 'Sarah', 'Dilton Park', '555003');
+ 
+INSERT INTO odbc_test.parts(part_id, description, price)
+ VALUES(1, 'Pipe', 12.5);
+
+INSERT INTO odbc_test.parts(part_id, description, price)
+ VALUES(2, 'Tap', 100);
+
+INSERT INTO odbc_test.orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(1, 1, TO_DATE('20130301', 'YYYYMMDD'), 'John', 'Closed');
+
+INSERT INTO odbc_test.orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(2, 1, TO_DATE('20130302', 'YYYYMMDD'), 'John', 'Open');
+
+INSERT INTO odbc_test.orders(order_id, customer_id, open_date, sales_person, status)
+ VALUES(3, 2, TO_DATE('20130303', 'YYYYMMDD'), 'Sue', 'Open');
+
+INSERT INTO odbc_test.order_lines(line_id, order_id, part_id, quantity)
+ VALUES(1, 1, 1, 1);
+
+INSERT INTO odbc_test.order_lines(line_id, order_id, part_id, quantity)
+ VALUES(2, 2, 1, 5);
+
+INSERT INTO odbc_test.order_lines(line_id, order_id, part_id, quantity)
+ VALUES(3, 2, 2, 1);
+
+INSERT INTO odbc_test.order_lines(line_id, order_id, part_id, quantity)
+ VALUES(4, 3, 2, 2);
