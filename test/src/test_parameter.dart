@@ -50,7 +50,7 @@ abstract class TestParameter {
                            SQL_INTEGER, 0, 0, customerId.address(), 0, null));
 
         _(sqlBindParameter(hStmt, 2, SQL_PARAM_INPUT, name.ctype(),
-                           SQL_CHAR, 0, 0, name.address(), name.length(), null));
+                           SQL_VARCHAR, 0, 0, name.address(), name.length(), null));
 
         _(sqlExecute(hStmt));
 
@@ -80,7 +80,7 @@ abstract class TestParameter {
         _(sqlSetParam(hStmt, 1, customerId.ctype(), SQL_INTEGER, 0, 0,
                       customerId.address(), null));
 
-        _(sqlSetParam(hStmt, 2, name.ctype(), SQL_CHAR, 0, 0,
+        _(sqlSetParam(hStmt, 2, name.ctype(), SQL_VARCHAR, 0, 0,
                       name.address(), null));
 
         _(sqlExecute(hStmt));
@@ -131,7 +131,7 @@ abstract class TestParameter {
 
           _(sqlBindParameter(hStmt, 1, SQL_PARAM_INPUT, par1.ctype(), SQL_INTEGER,
                              0, 0, par1.address(), 0, flags1.address()));
-          _(sqlBindParameter(hStmt, 2, SQL_PARAM_INPUT, par2.ctype(), SQL_CHAR,
+          _(sqlBindParameter(hStmt, 2, SQL_PARAM_INPUT, par2.ctype(), SQL_VARCHAR,
                              0, 0, par2.address(), par2.length(), flags2.address()));
 
           _(sqlExecDirect(hStmt, "INSERT INTO customers(customer_id, name)"
@@ -191,7 +191,7 @@ abstract class TestParameter {
           _(sqlBindParameter(hStmt, 1, SQL_PARAM_INPUT, buffer.ctype(0), SQL_INTEGER,
                              0, 0, buffer.address(0, 0), 0, buffer.address(0, 1)));
 
-          _(sqlBindParameter(hStmt, 2, SQL_PARAM_INPUT, buffer.ctype(2), SQL_CHAR,
+          _(sqlBindParameter(hStmt, 2, SQL_PARAM_INPUT, buffer.ctype(2), SQL_VARCHAR,
                              0, 0, buffer.address(0, 2), buffer.length(2), buffer.address(0, 3)));
 
           _(sqlExecDirect(hStmt, "INSERT INTO customers(customer_id, name)"

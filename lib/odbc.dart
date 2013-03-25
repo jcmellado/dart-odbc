@@ -23,7 +23,6 @@
 library odbc;
 
 import "dart-ext:odbc_ext";
-import "dart:scalarlist";
 
 part "src/sql.dart";
 part "src/sqltypes.dart";

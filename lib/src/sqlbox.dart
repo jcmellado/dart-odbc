@@ -58,7 +58,7 @@ abstract class SqlBuffer<T> {
   final List<TypeLen> _types;
   final int _rows;
 
-  ByteArrayViewable _buffer;
+  dynamic _buffer;
 
   SqlBuffer(int ctype, [int length = 1, this._rows = 1])
       : this._types = <TypeLen>[new TypeLen(ctype, length)] {
@@ -243,7 +243,7 @@ class SqlNumericBox extends SqlBox<SqlNumeric> {
 class SqlGuidBox extends SqlBox<SqlGuid> {
   SqlGuidBox() : super(SQL_C_GUID);
 }
-class SqlIntervalBox extends SqlBox<SqlInterval> {   //REVISAR ESTO!!!!
+class SqlIntervalBox extends SqlBox<SqlInterval> {
   SqlIntervalBox(int type) : super(type);
 }
 
@@ -341,7 +341,7 @@ class SqlNumericBuffer extends SqlBuffer<SqlNumeric> {
 class SqlGuidBuffer extends SqlBuffer<SqlGuid> {
   SqlGuidBuffer([int rows = 1]) : super(SQL_C_GUID, 1, rows);
 }
-class SqlIntervalBuffer extends SqlBuffer<SqlInterval> {   //REVISAR ESTO!!!!
+class SqlIntervalBuffer extends SqlBuffer<SqlInterval> {
   SqlIntervalBuffer(int type, [int rows = 1]) : super(type, 1, rows);
 }
 

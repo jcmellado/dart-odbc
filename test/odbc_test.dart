@@ -22,6 +22,8 @@
 
 library odbc_test;
 
+import "dart:io";
+
 import "package:odbc/odbc.dart";
 import "package:args/args.dart";
 import "package:unittest/unittest.dart";
@@ -88,8 +90,6 @@ bool _readArgs() {
 }
 
 void _runTests() {
-  ODBC_VERSION = _VERSION;
-
   var hStmt = new SqlHandle();
 
   TestBox.run();

@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 
 name: odbc
-version: 0.0.1
+version: 0.0.2
 author: Juan Mellado <jcmellado@gmail.com>
 homepage: http://code.google.com/p/dart-odbc/
 description: ODBC

@@ -47,7 +47,7 @@ abstract class TestBlob {
         var flags = new SqlIntBuffer()..poke(sqlLenDataAtExec(picture.rows));
 
         _(sqlBindParameter(hStmt, 1, SQL_PARAM_INPUT, picture.ctype(),
-            SQL_BINARY, picture.rows, 0, param, 0, flags.address()));
+            SQL_LONGVARBINARY, picture.rows, 0, param, 0, flags.address()));
 
         _(sqlExecute(hStmt), _needdata);
 
