@@ -1,4 +1,8 @@
 
+#### 0.0.3 - Mar 28, 2013
+
+  * Added .so library for Linux environment
+
 #### 0.0.2 - Mar 25, 2013
 
   * Removed ODBC_VERSION initialization in test library

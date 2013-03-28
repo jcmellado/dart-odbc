@@ -28,6 +28,10 @@
 #include <windows.h>
 #endif
 
+#ifndef _WIN32
+#include <cstring>
+#endif
+
 #include <sql.h>
 #include <sqlext.h>
 

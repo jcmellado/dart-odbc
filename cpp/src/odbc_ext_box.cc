@@ -30,7 +30,7 @@
 // Basic type extraction.
 //
 int64_t getInteger(Dart_Handle object) {
-  int64_t value = NULL;
+  int64_t value = 0;
   if (!Dart_IsNull(object) && Dart_IsInteger(object)) {
     bool fits;
     Dart_IntegerFitsIntoInt64(object, &fits); 
@@ -42,7 +42,7 @@ int64_t getInteger(Dart_Handle object) {
 }
 
 double getDouble(Dart_Handle object) {
-  double value = NULL;
+  double value = 0.0;
   if (!Dart_IsNull(object) && Dart_IsDouble(object)) {
     Dart_DoubleValue(object, &value);
   }
@@ -61,23 +61,24 @@ const char* getStringA(Dart_Handle object) {
 // Unboxing.
 //
 int64_t unboxInteger(Dart_Handle container) {
-  return Dart_IsNull(container) ? NULL : getInteger(UNBOX_VALUE(container));
+  return Dart_IsNull(container) ? 0 : getInteger(UNBOX_VALUE(container));
 }
 
 double unboxDouble(Dart_Handle container) {
-  return Dart_IsNull(container) ? NULL : getDouble(UNBOX_VALUE(container));
+  return Dart_IsNull(container) ? 0.0 : getDouble(UNBOX_VALUE(container));
 }
 
 const char* unboxStringA(Dart_Handle container) {
-  const char* string = NULL;
+  char* string = NULL;
   if (!Dart_IsNull(container)) {
     intptr_t length = UNBOX_LENGTH(container);
     if (length > 0) {
-      string = (const char*)Dart_ScopeAllocate(length);
+      string = (char*)Dart_ScopeAllocate(length);
       memset((void*)string, 0, length);
       Dart_Handle value = UNBOX_VALUE(container);
       if (!Dart_IsNull(value)) {
-        strncpy_s((char*)string, (rsize_t)length, getString(value), _TRUNCATE);
+        strncpy(string, getString(value), length);
+        string[length - 1] = '\0';
       }
     }
   }
@@ -105,8 +106,9 @@ void boxStringA(Dart_Handle container, const char* text) {
     if ((text == NULL) || (length <= 0)) {
       BOX_VALUE(container, Dart_Null());
     } else {
-      const char* string = (const char*)Dart_ScopeAllocate(length);
-      strncpy_s((char*)string, (rsize_t)length, (const char*)text, _TRUNCATE);
+      char* string = (char*)Dart_ScopeAllocate(length);
+      strncpy(string, text, length);
+      string[length - 1] = '\0';
       BOX_VALUE(container, Dart_NewStringFromCString(string));
     }
   }
@@ -241,10 +243,11 @@ Dart_Handle newObject(const char* className, Dart_Handle* args, int argCount) {
 // Peek.
 //
 Dart_Handle peekStringA(const char* text, intptr_t length) {
-  const char* string = NULL;
+  char* string = NULL;
   if (length > 0) {
-    string = (const char*)Dart_ScopeAllocate(length);
-    strncpy_s((char*)string, (rsize_t)length, text, _TRUNCATE);
+    string = (char*)Dart_ScopeAllocate(length);
+    strncpy(string, text, length);
+    string[length - 1] = '\0';
   }
   return string == NULL ? Dart_Null() : Dart_NewStringFromCString(string);
 }
@@ -420,7 +423,8 @@ void pokeStringA(Dart_Handle object, SQLCHAR* peer, intptr_t length) {
   if (length > 0) {
     memset((void*)peer, 0, length);
     if (value != NULL) {
-      strncpy_s((char*)peer, (rsize_t)length, value, _TRUNCATE);
+      strncpy((char*)peer, value, length);
+      peer[length - 1] = '\0';
     }
   }
 }
