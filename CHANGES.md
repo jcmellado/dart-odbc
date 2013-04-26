@@ -1,4 +1,8 @@
 
+#### 0.0.4 - Apr 26, 2013
+
+  * Updated dependencies (M4) 
+
 #### 0.0.3 - Mar 28, 2013
 
   * Added .so library for Linux environment
