@@ -599,11 +599,11 @@ void deallocate(void* peer) {
   delete [] (uint8_t*)(peer);
 }
 
-void finalizerCallback(Dart_Handle handle, void* peer) {
+void finalizerCallback(Dart_WeakPersistentHandle handle, void* peer) {
   if (peer != NULL) {
     deallocate(peer);
   }
-  Dart_DeletePersistentHandle(handle);
+  Dart_DeleteWeakPersistentHandle(handle);
 }
 
 //
@@ -628,9 +628,12 @@ intptr_t rowSize(Dart_Handle container) {
 
 void* address(Dart_Handle container, int64_t row, int64_t col,
               int64_t& ctype, intptr_t& length) {
-  void* peer = NULL;
   Dart_Handle buffer = UNBOX_BUFFER(container);
-  Dart_ExternalTypedDataGetPeer(buffer, &peer);
+
+  void* peer = NULL;
+  Dart_TypedData_Type type;
+  intptr_t len;
+  Dart_TypedDataAcquireData(buffer, &type, &peer, &len); //TODO Dart_TypedDataReleaseData should be called!!!
 
   intptr_t size = 0;
   intptr_t colOffset = 0;

@@ -19,11 +19,14 @@
 # THE SOFTWARE.
 
 name: odbc
-version: 0.0.4
+version: 0.0.5
 author: Juan Mellado <jcmellado@gmail.com>
 homepage: http://code.google.com/p/dart-odbc/
-description: ODBC binding for Dart
+description: ODBC binding for Dart.
+
+environment:
+  sdk: ">=0.8.10+6 <2.0.0"
 
 dependencies:
-  args: ">=0.5.0+1"
-  unittest: ">=0.5.0+1"
+  args: ">=0.9.0 <0.10.0"
+  unittest: ">=0.9.0 <0.10.0"

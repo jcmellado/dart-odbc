@@ -22,8 +22,6 @@
 
 library odbc_test;
 
-import "dart:io";
-
 import "package:odbc/odbc.dart";
 import "package:args/args.dart";
 import "package:unittest/unittest.dart";
@@ -56,13 +54,13 @@ var _DATABASE;
 var _CATALOG;
 
 // Test all.
-void main() {
-  if (_readArgs()) {
+void main(List<String> args) {
+  if (_readArgs(args)) {
     _runTests();
   }
 }
 
-bool _readArgs() {
+bool _readArgs(List<String> args) {
   var parser = new ArgParser();
   parser.addOption("driver", help: "Driver name (e.g. \"Oracle ODBC\")",
       callback: (driver) => _DRIVER = driver);
@@ -77,8 +75,6 @@ bool _readArgs() {
       callback: (database) => _DATABASE = database);
   parser.addOption("catalog", help: "Catalog name",
       callback: (catalog) => _CATALOG = catalog);
-
-  var args = new Options().arguments;
 
   if (args.isEmpty) {
     print("Usage: odbc_test --option value ...\n${parser.getUsage()}");
