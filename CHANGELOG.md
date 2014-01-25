@@ -1,4 +1,8 @@
 
+#### 0.0.6 - Jan 25, 2014
+
+  * Updated README.md, LICENSE.txt and CHANGELOG.md 
+
 #### 0.0.5 - Nov 08, 2013
 
   * Added List<String> args to main function, Options class was removed from SDK
