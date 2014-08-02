@@ -1000,7 +1000,7 @@ ODBC_EXT_FUNCTION(sqlAllocate)
   intptr_t size = rowSize(container) * UNBOX_ROWS(container);
   uint8_t* peer = allocate(size);
   Dart_Handle buffer = Dart_NewExternalTypedData(Dart_TypedData_kUint8, peer, size);
-  Dart_NewWeakPersistentHandle(buffer, peer, finalizerCallback);
+  Dart_NewWeakPersistentHandle(buffer, peer, size, finalizerCallback);
 
   BOX_BUFFER(container, buffer);
 ODBC_EXT_RETURN

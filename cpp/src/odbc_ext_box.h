@@ -144,7 +144,7 @@ uint8_t* allocate(size_t size);
 
 void deallocate(void* peer);
 
-void finalizerCallback(Dart_WeakPersistentHandle handle, void* peer);
+void finalizerCallback(void* isolateCallbackData, Dart_WeakPersistentHandle handle, void* peer);
 
 intptr_t rowSize(Dart_Handle container);
 

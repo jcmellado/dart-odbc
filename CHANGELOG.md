@@ -1,4 +1,8 @@
 
+#### 0.0.7 - Aug 02, 2014
+
+  * Updated cpp code to match new internal Dart API method signatures 
+
 #### 0.0.6 - Jan 25, 2014
 
   * Updated README.md, LICENSE.txt and CHANGELOG.md 

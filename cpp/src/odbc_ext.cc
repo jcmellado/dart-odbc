@@ -28,7 +28,7 @@
 #include "odbc_ext_sql.h"
 #endif
 
-Dart_NativeFunction nativeResolver(Dart_Handle name, int argc) {
+Dart_NativeFunction nativeResolver(Dart_Handle name, int argc, bool * autoSetupScope) {
   Dart_EnterScope();
   Dart_NativeFunction result = odbcResolver(name, argc);
   Dart_ExitScope();
@@ -40,7 +40,7 @@ DART_EXPORT Dart_Handle odbc_ext_Init(Dart_Handle library) {
   if (Dart_IsError(library)) {
     return library;
   }
-  Dart_Handle result = Dart_SetNativeResolver(library, nativeResolver);
+  Dart_Handle result = Dart_SetNativeResolver(library, nativeResolver, NULL);
   if (Dart_IsError(result)) {
     return result;
   }

@@ -599,11 +599,12 @@ void deallocate(void* peer) {
   delete [] (uint8_t*)(peer);
 }
 
-void finalizerCallback(Dart_WeakPersistentHandle handle, void* peer) {
+void finalizerCallback(void* isolateCallbackData, Dart_WeakPersistentHandle handle, void* peer) {
   if (peer != NULL) {
     deallocate(peer);
   }
-  Dart_DeleteWeakPersistentHandle(handle);
+  Dart_Isolate isolate = Dart_CurrentIsolate();
+  Dart_DeleteWeakPersistentHandle(isolate, handle);
 }
 
 //
